@@ -39,4 +39,9 @@ public class MemberController {
 		return result;
 	}
 
+	public int updateMember(Member member) {
+		int result = mDao.updateMember(member);
+		return result;
+	}
+
 }

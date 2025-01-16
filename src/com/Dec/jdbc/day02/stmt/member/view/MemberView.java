@@ -40,6 +40,28 @@ public class MemberView {
 				break;
 			case 2: 
 				// 회원정보수정
+				// 아이디, 비번, 이름, 성별, 나이, 이메일, 폰, 주소, 취미
+				// -> 비번, 이메일, 폰, 주소, 취미
+				// UPDATE MEMBER_TBL SET MEMBER_PWD = 'qwer1234'
+				// , EMAIL = 'khuser01@naver.com', PHONE = '01048843995',
+				// ADDRESS = '경기도 남양주시', HOBBY = '코딩, 수영'
+				// WHERE MEMBER_ID = 'memberId';
+				// 데이터 있을 경우 수정, 없으면 NO_DATE_FOUND 출력
+				memberId = this.inputMemberId();
+				member = manage.selectOneById(memberId);
+				if(member != null) {
+					// 정보수정
+					member = this.modifyMember(memberId);
+					result = manage.updateMember(member);
+					if(result > 0) {
+						this.showMessage(SUCCESS_MSG);
+					}else {
+						this.showMessage(FAIL_MSG);
+					}
+					
+				}else {
+					this.showMessage(NO_DATE_FOUND);
+				}
 				break;
 			case 3: 
 				// 회원탈퇴
@@ -79,6 +101,26 @@ public class MemberView {
 		
 	}
 
+
+	private Member modifyMember(String memberId) {
+		System.out.println("==== 수정할 정보 입력 ====");
+		//  -> 비번, 이메일, 폰, 주소, 취미 + ID필요
+		System.out.print("비밀번호 : ");
+		String memberPwd = sc.next();
+		System.out.print("이메일 : ");
+		String email = sc.next();
+		System.out.print("전화번호 : ");
+		String phone = sc.next();
+		System.out.print("주소 : ");
+		sc.nextLine(); // 앞에서 입력한 엔터를 제거, 개행 제거
+		String address = sc.nextLine();
+		System.out.print("취미 : ");
+		String hobby = sc.nextLine();
+		// 입력한 데이터를 객체 초기화함. 객체 생성됨
+		Member member = new Member(memberId, memberPwd, email, phone, address, hobby);
+		// 호출한 곳에서 쓸 수 있도록 member 리턴함.
+		return member;
+	}
 
 	private void viewOneMember(Member member) {
 		// 멤버 한명 정보 출력
@@ -130,9 +172,11 @@ public class MemberView {
 		String memberPwd = sc.next();
 		System.out.print("이름 : ");
 		String memberName = sc.next();
+		System.out.print("성별(M,F) : ");
+		String gender = sc.next().charAt(0)+"";
 		System.out.print("나이 : ");
 		int age = sc.nextInt();
-		Member member = new Member(memberId, memberPwd, memberName, age);
+		Member member = new Member(memberId, memberPwd, memberName,gender, age);
 		return member;
 	}
 

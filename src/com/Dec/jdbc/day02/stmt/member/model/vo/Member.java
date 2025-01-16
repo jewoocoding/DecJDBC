@@ -39,6 +39,25 @@ public class Member {
 		this.enrollDate = enrollDate;
 	}
 
+	public Member(String memberId, String memberPwd, String email, String phone, String address, String hobby) {
+		super();
+		this.memberId = memberId;
+		this.memberPwd = memberPwd;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
+		this.hobby = hobby;
+	}
+	
+	public Member(String memberId, String memberPwd, String memberName, String gender, int age) {
+		super();
+		this.memberId = memberId;
+		this.memberPwd = memberPwd;
+		this.memberName = memberName;
+		this.gender = gender;
+		this.age = age;
+	}
+
 	public String getMemberId() {
 		return memberId;
 	}

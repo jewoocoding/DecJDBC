@@ -24,9 +24,9 @@ public class MemberDAO {
 	public int insertMember(Member member) {
 		// 멤버 삽입
 		int result = 0;
-		String query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, AGE) "
+		String query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, GENDER, AGE) "
 				+ "VALUES('"+member.getMemberId()+"','"+member.getMemberPwd()
-				+"','"+member.getMemberName()+"',"+member.getAge()+")";
+				+"','"+member.getMemberName()+"','"+member.getGender()+"',"+member.getAge()+")";
 		Connection conn = null;
 		Statement stmt = null;
 		try {
@@ -179,6 +179,43 @@ public class MemberDAO {
 			}
 		}
 		// 성공여부를 알 수 있도록 result를 리턴해줌
+		return result;
+	}
+
+	public int updateMember(Member member) {
+		int result = 0;
+		String query = "UPDATE MEMBER_TBL SET "
+				+ "MEMBER_PWD = '"+member.getMemberPwd()+"', "
+				+ "EMAIL = '"+member.getEmail()+"', "
+				+ "PHONE = '"+member.getPhone()+"', "
+				+ "ADDRESS = '"+member.getAddress()+"', "
+				+ "HOBBY = '"+member.getHobby()+"'"
+				+ " WHERE MEMBER_ID = '"+member.getMemberId()+"'";
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+			// 쿼리문 실행 코드 누락 주의
+			result = stmt.executeUpdate(query);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				// finally에서 자원 해제
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		return result;
 	}
 }
