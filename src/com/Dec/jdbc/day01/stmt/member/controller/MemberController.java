@@ -32,4 +32,14 @@ public class MemberController {
 		Member member = mDao.selectOneById(memberId);
 		return member;
 	}
+
+	public int changeOneById(String memberId, Member member) {
+		int changedMember = mDao.updateOneById(memberId, member);
+		return changedMember;
+	}
+
+	public int deleteMemberById(String memberId) {
+		int result = mDao.deleteMember(memberId);
+		return result;
+	}
 }

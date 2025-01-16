@@ -19,17 +19,22 @@ public class MemberView {
 	private static final String BYE_MSG = "프로그램이 종료되었습니다.";
 	private static final String FAIL_MSG = "[서비스 실패]";
 	private static final String SUCCESS_MSG = "[서비스 성공]";
+	private static final String SEARCH_CATEGORY = "검색";
+	private static final String UPDATE_CATEGORY = "수정";
+	private static final String DELETE_CATEGORY = "삭제";
 	
 	public void startProgram() {
 		finish:
 		while(true) {
 			int menu = this.printMenu();
 			Member member = null;
+			String memberId = "";
+			int result = 0;
 			switch(menu) {
 				case 1:
 					// 회원 가입
 					member = this.inputMember();
-					int result = manage.registerMember(member);
+					result = manage.registerMember(member);
 					if(result == 0) {
 						this.printMessage(FAIL_MSG);
 					}else {
@@ -43,14 +48,40 @@ public class MemberView {
 					break;
 				case 3:
 					// 회원 검색(아이디)
-					String memberId = this.inputMemberId();
+					memberId = this.inputMemberId(SEARCH_CATEGORY);
 					member = manage.findOneById(memberId);
 					if(member == null) {
 						this.printMessage(FAIL_MSG);
 					}else {
 						this.showMember(member);						
 					}
-					
+					break;
+				case 4:
+					// 회원 수정
+					memberId = this.inputMemberId(UPDATE_CATEGORY);
+					member = manage.findOneById(memberId);
+					if(member == null) {
+						this.printMessage(FAIL_MSG);
+					}else {
+						this.showMember(member);
+						Member changedMember = this.inputMember();
+						result = manage.changeOneById(memberId, changedMember);
+						if(result == 0) {
+							this.printMessage(FAIL_MSG);
+						}else {
+							this.printMessage(SUCCESS_MSG);
+						}
+					}
+					break;
+				case 5: 
+					// 회원 삭제
+					memberId = this.inputMemberId(DELETE_CATEGORY);
+					result = manage.deleteMemberById(memberId);
+					if(result == 0) {
+						this.printMessage(FAIL_MSG);
+					}else {
+						this.printMessage(SUCCESS_MSG);
+					}
 					break;
 				case 0:
 					// 프로그램 종료
@@ -61,14 +92,14 @@ public class MemberView {
 	}
 
 	private void showMember(Member member) {
-		System.out.println("==== 검색한 회원 정보 ====");
+		System.out.println("==== 회원 정보 ====");
 		System.out.println(member.getMemberId()+"\t\t"+member.getMemberName()+"\t\t"
 				+member.getEmail()+"\t\t"+member.getPhone()+"\t\t"+member.getAddress());
 	}
 
-	private String inputMemberId() {
-		System.out.println("==== 회원 검색(아이디) ====");
-		System.out.print("검색하실 회원아이디 : ");
+	private String inputMemberId(String category) {
+		System.out.println("==== 회원 "+category+"(아이디) ====");
+		System.out.print(category+"하실 회원아이디 : ");
 		String memberId = sc.next();
 		return memberId;
 	}
@@ -118,6 +149,8 @@ public class MemberView {
 		System.out.println("1. 회원가입");
 		System.out.println("2. 회원 전체 조회");
 		System.out.println("3. 회원 검색(아이디)");
+		System.out.println("4. 회원 수정");
+		System.out.println("5. 회원 삭제");
 		System.out.println("0. 프로그램 종료");
 		System.out.print("메뉴 선택 : ");
 		int choice = sc.nextInt();

@@ -145,4 +145,43 @@ public class MemberDAO {
 		return member;
 	}
 
+	public int updateOneById(String memberId, Member member) {
+		
+		int result = 0;
+		String query = "UPDATE MEMBER_TBL SET HOBBY = '"+member.getHobby()+"'"
+				+ "WHERE MEMBER_ID = '"+memberId+"'";
+		
+		try {
+			Class.forName(DRIVER_NAME);
+			Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+			Statement stmt = conn.createStatement();
+			
+			result = stmt.executeUpdate(query);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public int deleteMember(String memberId) {
+		int result = 0;
+		String query = "DELETE FROM MEMBER_TBL WHERE MEMBER_ID = '"+memberId+"'";
+		try {
+			Class.forName(DRIVER_NAME);
+			Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+			Statement stmt = conn.createStatement();
+			
+			result = stmt.executeUpdate(query);
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 }
