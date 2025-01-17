@@ -1,5 +1,9 @@
 package com.Dec.jdbc.day03.pstmt.member.model.dao;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -7,15 +11,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.Dec.jdbc.day03.pstmt.member.model.vo.Member;
 
 public class MemberDAO {
+
 //	private static final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
 //	private static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
 //	private static final String USERNAME = "KH";
 //	private static final String PASSWORD = "KH";
-
+	
+	private static final String QUERY_FILE_NAME = "resources/query.properties";
+	private Properties prop;
+	
+	public MemberDAO() {
+		try {
+			Reader reader = new FileReader(QUERY_FILE_NAME);
+			prop = new Properties();
+			prop.load(reader);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int insertMember(Connection conn ,Member member) {
 		// Connection conn = null;
 		// Statement stmt = null;
@@ -24,7 +45,10 @@ public class MemberDAO {
 		String query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, GENDER, AGE) "
 				+ "VALUES('"+member.getMemberId()+"','"+member.getMemberPwd()
 				+"','"+member.getMemberName()+"','"+member.getGender()+"',"+member.getAge()+")";
-		query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, GENDER, AGE) VALUES(?,?,?,?,?)";
+		
+		query = prop.getProperty("insertMember");
+		
+		// query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, GENDER, AGE) VALUES(?,?,?,?,?)";
 		
 		try {
 			// conn = this.getConnection();
@@ -72,7 +96,8 @@ public class MemberDAO {
 				+ "LOWER(MEMBER_ID) = LOWER('"+memberId+"')";
 		// #2. 쿼리문 변경
 		// - ?는 위치홀더라고 하며, 입력값이 들어가는 위치를 표시해줌.
-		query = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ?";
+		// query = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ?";
+		query = prop.getProperty("selectOneById");
 		ResultSet rset = null;
 		Member member = null;
 		try {
@@ -115,6 +140,7 @@ public class MemberDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		String query = "SELECT * FROM MEMBER_TBL";
+		query = prop.getProperty("getMemberList");
 		List<Member> mList = new ArrayList<Member>();
 		
 		try {
@@ -149,7 +175,8 @@ public class MemberDAO {
 		int result = 0;
 		String query = "DELETE FROM MEMBER_TBL "
 				+ "WHERE LOWER(MEMBER_ID) = LOWER('"+memberId+"')";
-		query = "DELETE FROM MEMBER_TBL WHERE LOWER(MEMBER_ID) = LOWER(?)";
+		// query = "DELETE FROM MEMBER_TBL WHERE LOWER(MEMBER_ID) = LOWER(?)";
+		query = prop.getProperty("deleteOneById");
 		try {
 			// conn = this.getConnection();
 			// stmt = conn.createStatement();
@@ -185,8 +212,9 @@ public class MemberDAO {
 				+ "ADDRESS = '"+member.getAddress()+"', "
 				+ "HOBBY = '"+member.getHobby()+"'"
 				+ " WHERE MEMBER_ID = '"+member.getMemberId()+"'";
-		query = "UPDATE MEMBER_TBL SET MEMBER_PWD = ?, EMAIL = ?, PHONE = ?, ADDRESS = ?, HOBBY = ? "
-				+ "WHERE MEMBER_ID = ?";
+		//query = "UPDATE MEMBER_TBL SET MEMBER_PWD = ?, EMAIL = ?, PHONE = ?, ADDRESS = ?, HOBBY = ? "
+				//+ "WHERE MEMBER_ID = ?";
+		query = prop.getProperty("updateMember");
 		int result = 0;
 		
 		try {
