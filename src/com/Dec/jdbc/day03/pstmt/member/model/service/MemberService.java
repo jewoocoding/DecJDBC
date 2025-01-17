@@ -14,7 +14,7 @@ public class MemberService {
 	private MemberDAO mDao;
 	
 	public MemberService() {
-		jdbcTemplate = new JDBCTemplate();
+		jdbcTemplate = JDBCTemplate.getInstance(); // 싱글톤 패턴으로 객체가 하나만 생성되게 new 키워드로 객채를 생성하지 않고 메소드로 객체를 받아옴
 		mDao = new MemberDAO();
 	}
 	
@@ -27,8 +27,6 @@ public class MemberService {
 			conn = jdbcTemplate.getConnection();
 			result = mDao.insertMember(conn, member);
 			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -47,8 +45,6 @@ public class MemberService {
 		try {
 			conn = jdbcTemplate.getConnection();
 			member = mDao.selectOneById(conn, memberId);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -68,8 +64,6 @@ public class MemberService {
 		try {
 			conn = jdbcTemplate.getConnection();
 			mList = mDao.getMemberList(conn);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -88,8 +82,6 @@ public class MemberService {
 		try {
 			conn = jdbcTemplate.getConnection();
 			result = mDao.deleteOneById(conn, memberId);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -111,8 +103,6 @@ public class MemberService {
 			conn = jdbcTemplate.getConnection();
 			result = mDao.updateMember(conn, member);
 			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
