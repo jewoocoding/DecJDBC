@@ -2,24 +2,22 @@ package com.Dec.jdbc.day03.pstmt.member.model.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.Dec.jdbc.day03.pstmt.member.model.vo.Member;
 
 public class MemberDAO {
-	private static final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
-	private static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
-	private static final String USERNAME = "KH";
-	private static final String PASSWORD = "KH";
+//	private static final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
+//	private static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+//	private static final String USERNAME = "KH";
+//	private static final String PASSWORD = "KH";
 
-	public int insertMember(Member member) {
-		Connection conn = null;
+	public int insertMember(Connection conn ,Member member) {
+		// Connection conn = null;
 		// Statement stmt = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -29,7 +27,7 @@ public class MemberDAO {
 		query = "INSERT INTO MEMBER_TBL(MEMBER_ID, MEMBER_PWD, MEMBER_NAME, GENDER, AGE) VALUES(?,?,?,?,?)";
 		
 		try {
-			conn = this.getConnection();
+			// conn = this.getConnection();
 			// stmt = conn.createStatement();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(5, member.getAge());
@@ -42,19 +40,14 @@ public class MemberDAO {
 			// result = stmt.executeUpdate(query);
 			result = pstmt.executeUpdate();
 			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			try {
-				conn.close();
+				// conn.close();
 				//stmt.close();
 				pstmt.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -62,7 +55,7 @@ public class MemberDAO {
 		return result;
 	}
 
-	public Member selectOneById(String memberId) {
+	public Member selectOneById(Connection conn, String memberId) {
 		/*
 		 * 1. 쿼리문에 위치홀더(?)
 		 * 2. PreparedStatement 생성
@@ -70,7 +63,7 @@ public class MemberDAO {
 		 * 4. 쿼리문 실행(query문 전달X)
 		 */
 		
-		Connection conn = null;
+		// Connection conn = null;
 		// #1. PreparedStatement 사용
 		// Statement stmt = null;
 		PreparedStatement pstmt = null;
@@ -83,7 +76,7 @@ public class MemberDAO {
 		ResultSet rset = null;
 		Member member = null;
 		try {
-			conn = this.getConnection();
+			// conn = this.getConnection();
 			// 쿼리문 실행
 			// #3. 쿼리문 실행 부분 변경
 			//stmt = conn.createStatement();
@@ -99,11 +92,7 @@ public class MemberDAO {
 				member = this.rsetToMember(rset);
 			}
 			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			try {
@@ -113,24 +102,23 @@ public class MemberDAO {
 				rset.close();
 				// stmt.close();
 				pstmt.close();
-				conn.close();
+				// conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return member;
 	}
 
-	public List<Member> getMemberList() {
-		Connection conn = null;
+	public List<Member> getMemberList(Connection conn) {
+		// Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		String query = "SELECT * FROM MEMBER_TBL";
 		List<Member> mList = new ArrayList<Member>();
 		
 		try {
-			conn = this.getConnection();
+			// conn = this.getConnection();
 			pstmt = conn.prepareStatement(query);
 			rset = pstmt.executeQuery();
 			while(rset.next()) {
@@ -138,19 +126,14 @@ public class MemberDAO {
 				mList.add(member);
 			}
 			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			try {
 				rset.close();
 				pstmt.close();
-				conn.close();
+				// conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -159,8 +142,8 @@ public class MemberDAO {
 
 	
 	
-	public int deleteOneById(String memberId) {
-		Connection conn = null;
+	public int deleteOneById(Connection conn, String memberId) {
+		// Connection conn = null;
 		// Statement stmt = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -168,26 +151,21 @@ public class MemberDAO {
 				+ "WHERE LOWER(MEMBER_ID) = LOWER('"+memberId+"')";
 		query = "DELETE FROM MEMBER_TBL WHERE LOWER(MEMBER_ID) = LOWER(?)";
 		try {
-			conn = this.getConnection();
+			// conn = this.getConnection();
 			// stmt = conn.createStatement();
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, memberId);
 			
 			// result = stmt.executeUpdate(query);
 			result = pstmt.executeUpdate();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			try {
 				// stmt.close();
-				conn.close();
+				// conn.close();
 				pstmt.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -196,8 +174,8 @@ public class MemberDAO {
 		return result;
 	}
 
-	public int updateMember(Member member) {
-		Connection conn = null;
+	public int updateMember(Connection conn, Member member) {
+		// Connection conn = null;
 		// Statement stmt = null;
 		PreparedStatement pstmt = null;
 		String query = "UPDATE MEMBER_TBL SET "
@@ -212,7 +190,7 @@ public class MemberDAO {
 		int result = 0;
 		
 		try {
-			conn = this.getConnection();
+			// conn = this.getConnection();
 			// stmt = conn.createStatement();
 			pstmt = conn.prepareStatement(query);
 			
@@ -226,19 +204,14 @@ public class MemberDAO {
 			// result = stmt.executeUpdate(query);
 			result = pstmt.executeUpdate();
 			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			try {
 				// stmt.close();
-				conn.close();
+				// conn.close();
 				pstmt.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -246,11 +219,11 @@ public class MemberDAO {
 		return result;
 	}
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName(DRIVER_NAME);
-		Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
-		return conn;
-	}
+//	private Connection getConnection() throws ClassNotFoundException, SQLException {
+//		Class.forName(DRIVER_NAME);
+//		Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+//		return conn;
+//	}
 
 	private Member rsetToMember(ResultSet rset) throws SQLException {
 		String memberId = rset.getString("MEMBER_ID");
